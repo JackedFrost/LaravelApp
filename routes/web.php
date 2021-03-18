@@ -13,15 +13,17 @@ use App\Http\Controllers\BirthdayController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+//public stuff!
 Route::get('/', function () {
     return view('welcome');
 });
 
+//private stuff!
+Route::middleware(['auth'])-> group(function (){
+
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
-
-require __DIR__.'/auth.php';
-
+})->name('dashboard');
 Route::resource('birthdays', BirthdayController::class);
+});
+require __DIR__.'/auth.php';
