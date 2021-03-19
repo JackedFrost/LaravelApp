@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\Birthday;
+use App\Http\Controllers\API\BirthdayController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,11 +16,14 @@ use App\Models\Birthday;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
 //show all of the birthdays to whoever wants to pull from the api
 
-Route::middleware('auth:sanctum')->get('/birthdays', function(Request $request){
-    return Birthday::all();
+Route::middleware('auth:sanctum')->group(function () {
+    Route::prefix('v1')->group(function () {
+        Route::apiResource('birthdays', BirthdayController::class);
+            //return Birthday::all();
+    });
+    Route::prefix('v2')->group(function () {  
+        //for future developments
+    });
 });
