@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Birthday;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\BirthdayResource;
+use App\Http\Resources\BirthdaysResource;
 
 class BirthdayController extends Controller
 {
@@ -16,8 +18,7 @@ class BirthdayController extends Controller
      */
     public function index()
     {
-        $birthdays = Auth::user()->birthdays;
-        return $birthdays;
+        return new BirthdaysResource(Auth::user()->birthdays()->paginate(2));
     }
 
     /**
@@ -46,7 +47,7 @@ class BirthdayController extends Controller
     public function show(Birthday $birthday)
     {
         if($birthday->user_id == Auth::user()->id){
-            return $birthday;
+            return new BirthdayResource($birthday);
         }
         abort(403);
     }
