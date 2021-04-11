@@ -16,9 +16,26 @@ class BirthdayController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return new BirthdaysResource(Auth::user()->birthdays()->paginate(2));
+        $query = Auth::user()->birthdays();
+
+        if($request->input('sort')){
+            $colums = explode(',', $request->input('sort'));
+            foreach($colums as $column){
+                if(substr($column, 0, 1) == '-'){
+                    $query = $query->orderBy(ltrim($column, '-'), 'desc');
+                }else{
+                    $query = $query ->orderBy($column, 'asc');
+                }
+            }    
+        }
+
+        if($request->input('page')){
+            return new BirthdaysResource($query->paginate(2));
+            }
+            
+        return new BirthdaysResource($query->get());
     }
 
     /**
